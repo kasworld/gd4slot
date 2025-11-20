@@ -7,7 +7,6 @@ var card_size :Vector2
 var card_list :Array
 var color_list :Array[Color]
 var 칸들 :Array[칸]
-var 선택rad :float = 0.0
 
 func init(n :int, card_sizea :Vector2, card_lista :Array, color_lista :Array[Color]) -> Reel:
 	id = n
@@ -30,7 +29,7 @@ func _process(delta: float) -> void:
 
 var 회전중인가 :bool # need emit
 var rotation_per_second :float
-var acceleration := 0.3 # per second
+var acceleration := 0.5 # per second
 func 돌리기(dur_sec :float = 1.0) -> void:
 	rotation.x += rotation_per_second * 2 * PI * dur_sec
 	if acceleration > 0:
@@ -52,7 +51,7 @@ func 멈추기시작(accel :float=0.5) -> void:
 func 선택된칸얻기() -> 칸:
 	if 칸들.size() == 0 :
 		return null
-	var rad = rotation.x - 선택rad - PI/2
+	var rad = rotation.x
 	rad = fposmod(rad, 2*PI)
 	var 칸rad = 2*PI / 칸들.size()
 	for 현재칸번호 in 칸들.size():

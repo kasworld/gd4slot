@@ -2,33 +2,54 @@ extends Node3D
 class_name Slots
 
 var reellist := []
-
+var cardcount :int = 13
+var colorlist :Array = NamedColorList.make_dark_color_list()
+var cardlist :Array = PlayingCard.make_deck()
+var cardsize := Vector2(10,5)
 func init() -> Slots:
-	var cardcount := 13
-	var colorlist := NamedColorList.make_dark_color_list()
-	var cardlist := PlayingCard.make_deck()
 	var clist :Array[Color] =[]
 	for c in colorlist:
 		clist.append(c[0])
-	var cardsize := Vector2(10,5)
-	var radius := cardcount * cardsize.y / (2*PI)
+	var radius := calc_radius()
 	var reelcount := 4
 	for i in reelcount:
 		clist.shuffle()
 		var rl = preload("res://reel/reel.tscn").instantiate().init(i, cardsize, cardlist.slice(i*cardcount,i*cardcount+cardcount), clist)
+		rl.rotation_stopped.connect(결과가결정됨)
 		rl.position =  Vector3(i*cardsize.x+i, 0, 0)
 		add_child(rl)
 		reellist.append(rl)
 
-	var arrow_left = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
-	arrow_left.position = reellist[0].position + Vector3(-cardsize.x/2-2.5,0,radius)
-	arrow_left.rotation.z = -PI/2
-	add_child(arrow_left)
-	var arrow_right = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
-	arrow_right.position = reellist[-1].position + Vector3(cardsize.x/2 +2.5,0,radius)
-	arrow_right.rotation.z = PI/2
-	add_child(arrow_right)
+	$Bar.mesh.material.albedo_color = Color.GOLD
+	$Bar.mesh.top_radius = 0.1
+	$Bar.mesh.bottom_radius = $Bar.mesh.top_radius
+	$Bar.mesh.height = (reellist[-1].position -reellist[0].position).x + cardsize.x
+	$Bar.position = (reellist[-1].position + reellist[0].position) /2 + Vector3(0,0,radius*1.1)
+
+	#var arrow_left = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
+	#arrow_left.position = reellist[0].position + Vector3(-cardsize.x/2-2.5,0,radius)
+	#arrow_left.rotation.z = -PI/2
+	#add_child(arrow_left)
+	#var arrow_right = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
+	#arrow_right.position = reellist[-1].position + Vector3(cardsize.x/2 +2.5,0,radius)
+	#arrow_right.rotation.z = PI/2
+	#add_child(arrow_right)
 	return self
+
+func 결과가결정됨(_id :int) -> void:
+	var 모두멈추었나 = true
+	for n in reellist:
+		if n.회전중인가:
+			모두멈추었나 = false
+
+	var 결과들 = ""
+	if 모두멈추었나:
+		for n in reellist:
+			결과들 += n.선택된칸얻기().글내용 + " "
+		print_debug( 결과들)
+
+func calc_radius() -> float:
+	return cardcount * cardsize.y / (2*PI)
 
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
