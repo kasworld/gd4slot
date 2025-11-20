@@ -40,16 +40,25 @@ func _ready() -> void:
 	var clist :Array[Color] =[]
 	for c in colorlist:
 		clist.append(c[0])
-	var cardsize := Vector2(4,2)
+	var cardsize := Vector2(10,5)
 	var radius := cardcount * cardsize.y / (2*PI)
-	for i in 4:
+	var reelcount := 4
+	var reellist := []
+	for i in reelcount:
 		clist.shuffle()
 		var rl = preload("res://reel/reel.tscn").instantiate().init(cardsize, cardlist.slice(i*cardcount,i*cardcount+cardcount), clist)
-		rl.position =  Vector3(cardsize.x*2,radius,0) + Vector3(i*cardsize.x+i, 0, 0)
+		rl.position =  Vector3(0,radius,0) + Vector3(i*cardsize.x+i, 0, 0)
 		add_child(rl)
-	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
-	$Arrow3D.position = Vector3(cardsize.x*2,radius,0) + Vector3(-5,0,radius)
+		reellist.append(rl)
 
+	var arrow_left = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
+	arrow_left.position = reellist[0].position + Vector3(-cardsize.x/2-2.5,0,radius)
+	arrow_left.rotation.z = -PI/2
+	add_child(arrow_left)
+	var arrow_right = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
+	arrow_right.position = reellist[-1].position + Vector3(cardsize.x/2 +2.5,0,radius)
+	arrow_right.rotation.z = PI/2
+	add_child(arrow_right)
 
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]

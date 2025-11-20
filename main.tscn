@@ -1,10 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=8 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
-[ext_resource type="PackedScene" uid="uid://c8npqlgeyy3xa" path="res://arrow3d/arrow_3d.tscn" id="6_7mycd"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -66,6 +65,3 @@ theme = SubResource("Theme_7mycd")
 environment = ExtResource("3_h2yge")
 
 [node name="AxisArrow3D" parent="." instance=ExtResource("4_1bvp3")]
-
-[node name="Arrow3D" parent="." instance=ExtResource("6_7mycd")]
-transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
