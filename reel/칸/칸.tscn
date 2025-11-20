@@ -1,0 +1,29 @@
+[gd_scene load_steps=7 format=3 uid="uid://o02enb5nefpx"]
+
+[ext_resource type="Script" uid="uid://by7055v5bfc5w" path="res://reel/칸/칸.gd" id="1_47w7n"]
+[ext_resource type="FontFile" uid="uid://gdh6qls28unk" path="res://font/HakgyoansimBareondotumR.ttf" id="2_siyr3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_siyr3"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_47w7n"]
+material = SubResource("StandardMaterial3D_siyr3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47w7n"]
+resource_local_to_scene = true
+
+[sub_resource type="TextMesh" id="TextMesh_siyr3"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_47w7n")
+text = "test"
+font = ExtResource("2_siyr3")
+pixel_size = 0.1
+
+[node name="칸" type="Node3D"]
+script = ExtResource("1_47w7n")
+
+[node name="판" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("PlaneMesh_47w7n")
+
+[node name="글" type="MeshInstance3D" parent="."]
+mesh = SubResource("TextMesh_siyr3")
