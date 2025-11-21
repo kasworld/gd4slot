@@ -21,10 +21,9 @@ func _ready() -> void:
 	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
-	$AxisArrow3D.set_size(5)
 
 	var msgrect = Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
-	$TimedMessage.init(80, msgrect, tr("gd4slot 1.0.0"))
+	$TimedMessage.init(80, msgrect, tr("gd4slot 2.0.0"))
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
@@ -34,7 +33,9 @@ func _ready() -> void:
 	add_child(slot)
 	slot.rotation_stopped.connect(슬롯멈춤)
 
-	$OmniLight3D.position = Vector3( slot.calc_width()/2, slot.calc_radius(), slot.calc_radius()*2)
+	$AxisArrow3D.set_size(slot.calc_radius())
+
+	$OmniLight3D.position = slot.calc_center() + Vector3( 0, 0, slot.calc_radius()*2)
 	$OmniLight3D.omni_range = slot.calc_size().length()*2
 	reset_camera_pos()
 
@@ -84,7 +85,7 @@ func _on_카메라변경_pressed() -> void:
 		reset_camera_pos()
 
 func reset_camera_pos()->void:
-	$Camera3D.position = Vector3(slot.calc_width()/2,0,slot.calc_radius()*2)
+	$Camera3D.position = slot.calc_center() + Vector3( 0, 0, slot.calc_radius()*2)
 	$Camera3D.look_at(slot.calc_center())
 	$Camera3D.far = slot.calc_size().length()*2
 
