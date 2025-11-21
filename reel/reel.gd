@@ -1,15 +1,15 @@
 extends Node3D
 class_name Reel
 
-signal rotation_stopped(n :int)
-var id :int
+signal rotation_stopped(rl :Reel)
+var 번호 :int
 var card_size :Vector2
 var card_list :Array
 var color_list :Array[Color]
 var 칸들 :Array[칸]
 
 func init(n :int, card_sizea :Vector2, card_lista :Array, color_lista :Array[Color]) -> Reel:
-	id = n
+	번호 = n
 	card_size = card_sizea
 	card_list = card_lista
 	color_list = color_lista
@@ -17,7 +17,7 @@ func init(n :int, card_sizea :Vector2, card_lista :Array, color_lista :Array[Col
 	var count := card_list.size()
 	var r := count * card_size.y / (2*PI)
 	for i in count:
-		var k :칸 = preload("res://reel/칸/칸.tscn").instantiate().init(card_size,r,card_list[i], color_list[i])
+		var k :칸 = preload("res://reel/칸/칸.tscn").instantiate().init(i, card_size,r,card_list[i], color_list[i])
 		k.rotation.x = 2*PI/count *i
 		add_child(k)
 		칸들.append(k)
@@ -29,7 +29,7 @@ func _process(delta: float) -> void:
 
 var 회전중인가 :bool # need emit
 var rotation_per_second :float
-var acceleration := 0.5 # per second
+var acceleration := 0.3 # per second
 func 돌리기(dur_sec :float = 1.0) -> void:
 	rotation.x += rotation_per_second * 2 * PI * dur_sec
 	if acceleration > 0:
@@ -37,7 +37,7 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 	if 회전중인가 and abs(rotation_per_second) <= 0.001:
 		회전중인가 = false
 		rotation_per_second = 0.0
-		rotation_stopped.emit(id)
+		rotation_stopped.emit(self)
 
 # spd : 초당 회전수
 func 돌리기시작(spd :float) -> void:
@@ -51,10 +51,11 @@ func 멈추기시작(accel :float=0.5) -> void:
 func 선택된칸얻기() -> 칸:
 	if 칸들.size() == 0 :
 		return null
-	var rad = rotation.x
-	rad = fposmod(rad, 2*PI)
-	var 칸rad = 2*PI / 칸들.size()
+	var 현재각도 = fposmod(-rotation.x, 2*PI)
+	var 한칸각도 = 2*PI / 칸들.size()
+	var 칸위치 = ceili( (현재각도-한칸각도/2) / 한칸각도 ) % 칸들.size()
+	print_debug( "슬롯번호%s 현재각도%s 한칸각도%s 칸위치%s" % [번호, 현재각도,한칸각도, 칸위치] )
 	for 현재칸번호 in 칸들.size():
-		if 칸rad/2 + 현재칸번호*칸rad > rad:
+		if 한칸각도/2 + 현재칸번호*한칸각도 > 현재각도:
 			return 칸들[현재칸번호]
 	return 칸들[0]

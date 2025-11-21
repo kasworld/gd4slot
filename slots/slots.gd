@@ -1,6 +1,8 @@
 extends Node3D
 class_name Slots
 
+signal rotation_stopped(s :Slots)
+
 var reellist := []
 var cardcount :int = 13
 var colorlist :Array = NamedColorList.make_dark_color_list()
@@ -36,17 +38,20 @@ func init() -> Slots:
 	#add_child(arrow_right)
 	return self
 
-func 결과가결정됨(_id :int) -> void:
+func 결과가결정됨( _rl :Reel) -> void:
 	var 모두멈추었나 = true
 	for n in reellist:
 		if n.회전중인가:
 			모두멈추었나 = false
 
-	var 결과들 = ""
 	if 모두멈추었나:
-		for n in reellist:
-			결과들 += n.선택된칸얻기().글내용 + " "
-		print_debug( 결과들)
+		rotation_stopped.emit(self)
+
+func 선택된칸들얻기() -> Array:
+	var rtn := []
+	for n in reellist:
+		rtn.append(n.선택된칸얻기())
+	return rtn
 
 func calc_radius() -> float:
 	return cardcount * cardsize.y / (2*PI)

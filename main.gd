@@ -13,6 +13,8 @@ func start_rotate_animation(nd :Node3D, axis :int, ani_dur :float) -> void:
 func start_all_animation() -> void:
 	pass
 
+var slot :Slots
+
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	var vp_size = get_viewport().get_visible_rect().size
@@ -33,10 +35,10 @@ func _ready() -> void:
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
-	var ss = preload("res://slots/slots.tscn").instantiate().init()
-	add_child(ss)
-	ss.position = Vector3(3,8,0)
-	ss.돌리기시작()
+	slot = preload("res://slots/slots.tscn").instantiate().init()
+	add_child(slot)
+	slot.position = Vector3(3,8,0)
+	#slot.돌리기시작()
 
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
@@ -56,8 +58,9 @@ func _process(_delta: float) -> void:
 	main_animation.handle_animation()
 
 var key2fn = {
-	KEY_ESCAPE:_on_button_esc_pressed,
-	KEY_ENTER:_on_카메라변경_pressed,
+	KEY_ESCAPE : _on_button_esc_pressed,
+	KEY_ENTER : _on_카메라변경_pressed,
+	KEY_SPACE : _on_돌리기_pressed,
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
@@ -79,3 +82,6 @@ func reset_camera_pos()->void:
 	$Camera3D.position = Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x)
 	$Camera3D.look_at(WorldSize/2)
 	$Camera3D.far = WorldSize.length()*2
+
+func _on_돌리기_pressed() -> void:
+	slot.돌리기시작()
