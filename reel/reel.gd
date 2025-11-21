@@ -60,3 +60,6 @@ func 선택된칸얻기() -> 칸:
 		#if 한칸각도/2 + 현재칸번호*한칸각도 > 현재각도:
 			#return 칸들[현재칸번호]
 	#return 칸들[0]
+
+func calc_radius() -> float:
+	return card_list.size() * card_size.y / (2*PI)

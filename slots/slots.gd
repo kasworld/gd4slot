@@ -3,20 +3,20 @@ class_name Slots
 
 signal rotation_stopped(s :Slots)
 
-var reellist := []
-var cardcount :int = 13
-var colorlist :Array = NamedColorList.make_dark_color_list()
+var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var cardlist :Array = PlayingCard.make_deck()
 var cardsize := Vector2(10,5)
+var reelcount := 4
+var reellist := []
+
 func init() -> Slots:
-	var clist :Array[Color] =[]
-	for c in colorlist:
-		clist.append(c[0])
-	var radius := calc_radius()
-	var reelcount := 4
+	var cardcount := 13
 	for i in reelcount:
-		clist.shuffle()
-		var rl = preload("res://reel/reel.tscn").instantiate().init(i, cardsize, cardlist.slice(i*cardcount,i*cardcount+cardcount), clist)
+		colorlist.shuffle()
+		var cdlist := cardlist.slice(i*cardcount,i*cardcount+cardcount).duplicate()
+		cdlist.append_array(PlayingCard.Joker)
+		cdlist.shuffle()
+		var rl = preload("res://reel/reel.tscn").instantiate().init(i, cardsize, cdlist, colorlist.slice(0,cdlist.size()).duplicate())
 		rl.rotation_stopped.connect(결과가결정됨)
 		rl.position =  Vector3(i*cardsize.x+i, 0, 0)
 		add_child(rl)
@@ -26,7 +26,7 @@ func init() -> Slots:
 	$Bar.mesh.top_radius = 0.1
 	$Bar.mesh.bottom_radius = $Bar.mesh.top_radius
 	$Bar.mesh.height = (reellist[-1].position -reellist[0].position).x + cardsize.x
-	$Bar.position = (reellist[-1].position + reellist[0].position) /2 + Vector3(0,0,radius*1.1)
+	$Bar.position = (reellist[-1].position + reellist[0].position) /2 + Vector3(0,0,reellist[0].calc_radius()*1.1)
 
 	#var arrow_left = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
 	#arrow_left.position = reellist[0].position + Vector3(-cardsize.x/2-2.5,0,radius)
@@ -52,9 +52,6 @@ func 선택된칸들얻기() -> Array:
 	for n in reellist:
 		rtn.append(n.선택된칸얻기())
 	return rtn
-
-func calc_radius() -> float:
-	return cardcount * cardsize.y / (2*PI)
 
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
