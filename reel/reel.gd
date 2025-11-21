@@ -54,8 +54,9 @@ func 선택된칸얻기() -> 칸:
 	var 현재각도 = fposmod(-rotation.x, 2*PI)
 	var 한칸각도 = 2*PI / 칸들.size()
 	var 칸위치 = ceili( (현재각도-한칸각도/2) / 한칸각도 ) % 칸들.size()
-	print_debug( "슬롯번호%s 현재각도%s 한칸각도%s 칸위치%s" % [번호, 현재각도,한칸각도, 칸위치] )
-	for 현재칸번호 in 칸들.size():
-		if 한칸각도/2 + 현재칸번호*한칸각도 > 현재각도:
-			return 칸들[현재칸번호]
-	return 칸들[0]
+	return 칸들[칸위치]
+	#print_debug( "슬롯번호%s 현재각도%s 한칸각도%s 칸위치%s" % [번호, 현재각도,한칸각도, 칸위치] )
+	#for 현재칸번호 in 칸들.size():
+		#if 한칸각도/2 + 현재칸번호*한칸각도 > 현재각도:
+			#return 칸들[현재칸번호]
+	#return 칸들[0]

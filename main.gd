@@ -38,7 +38,14 @@ func _ready() -> void:
 	slot = preload("res://slots/slots.tscn").instantiate().init()
 	add_child(slot)
 	slot.position = Vector3(3,8,0)
-	#slot.돌리기시작()
+	slot.rotation_stopped.connect(슬롯멈춤)
+
+func 슬롯멈춤(sl :Slots) -> void:
+	var 칸들 := sl.선택된칸들얻기()
+	var 결과 := ""
+	for k in 칸들:
+		결과 += k.글내용 + " "
+	$"왼쪽패널/점수".text = 결과
 
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
