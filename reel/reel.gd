@@ -3,26 +3,24 @@ class_name Reel
 
 signal rotation_stopped(rl :Reel)
 var 번호 :int
-var card_size :Vector2
-var card_list :Array
-var color_list :Array[Color]
+var 칸크기 :Vector2
+var 칸정보목록 :Array # [ text, color ]
 var 칸들 :Array[칸]
 var 한칸각도 :float
 
 func calc_radius() -> float:
-	return card_list.size() * card_size.y / (2*PI)
+	return 칸정보목록.size() * 칸크기.y / (2*PI)
 
-func init(n :int, card_sizea :Vector2, card_lista :Array, color_lista :Array[Color]) -> Reel:
+func init(n :int, 칸크기a :Vector2, 칸정보목록a :Array) -> Reel:
 	번호 = n
-	card_size = card_sizea
-	card_list = card_lista
-	color_list = color_lista
-	var count := card_list.size()
+	칸크기 = 칸크기a
+	칸정보목록 = 칸정보목록a
+	var count := 칸정보목록.size()
 	한칸각도 = 2*PI / count
 
-	var r := count * card_size.y / (2*PI)
+	var r := count * 칸크기.y / (2*PI)
 	for i in count:
-		var k :칸 = preload("res://reel/칸/칸.tscn").instantiate().init(i, card_size,r,card_list[i], color_list[i%color_list.size()])
+		var k :칸 = preload("res://reel/칸/칸.tscn").instantiate().init(i, 칸크기,r,칸정보목록[i][0], 칸정보목록[i][1])
 		k.rotation.x = 2*PI/count *i
 		add_child(k)
 		칸들.append(k)
@@ -30,8 +28,8 @@ func init(n :int, card_sizea :Vector2, card_lista :Array, color_lista :Array[Col
 	$MeshInstance3D.mesh.material.albedo_color = Color.WHITE
 	$MeshInstance3D.mesh.top_radius = calc_radius()
 	$MeshInstance3D.mesh.bottom_radius = $MeshInstance3D.mesh.top_radius
-	$MeshInstance3D.mesh.height = card_size.x
-	$MeshInstance3D.mesh.radial_segments = card_list.size()
+	$MeshInstance3D.mesh.height = 칸크기.x
+	$MeshInstance3D.mesh.radial_segments = 칸정보목록.size()
 	$MeshInstance3D.rotation.x = 한칸각도/2
 
 	return self

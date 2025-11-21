@@ -5,19 +5,20 @@ signal rotation_stopped(s :Slots)
 
 var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var cardlist :Array = PlayingCard.make_deck_with_joker()
-var cardsize := Vector2(10,5)
+var 칸크기 := Vector2(10,5)
 var reelcount := 5
 var reellist := []
 
 func init() -> Slots:
+	var 칸정보목록 := []
+	for i in cardlist.size():
+		칸정보목록.append( [cardlist[i], colorlist[i%colorlist.size()]]  )
 	for i in reelcount:
-		var cdlist := cardlist.duplicate()
-		cdlist.shuffle()
-		var colist := colorlist.duplicate()
-		colist.shuffle()
-		var rl = preload("res://reel/reel.tscn").instantiate().init(i, cardsize, cdlist, colist)
+		var kilist := 칸정보목록.duplicate()
+		kilist.shuffle()
+		var rl = preload("res://reel/reel.tscn").instantiate().init(i, 칸크기, kilist)
 		rl.rotation_stopped.connect(결과가결정됨)
-		rl.position = Vector3(i*cardsize.x+i +cardsize.x/2 -calc_width()/2, 0, 0)
+		rl.position = Vector3(i*칸크기.x+i +칸크기.x/2 -calc_width()/2, 0, 0)
 		add_child(rl)
 		reellist.append(rl)
 
@@ -33,7 +34,7 @@ func calc_radius() -> float:
 	return reellist[0].calc_radius()
 
 func calc_width() -> float:
-	return reelcount*(cardsize.x+1)
+	return reelcount*(칸크기.x+1)
 
 func calc_size() -> Vector3:
 	return Vector3(calc_width(),calc_radius()*2,calc_radius()*2)
