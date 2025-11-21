@@ -9,6 +9,9 @@ var color_list :Array[Color]
 var 칸들 :Array[칸]
 var 한칸각도 :float
 
+func calc_radius() -> float:
+	return card_list.size() * card_size.y / (2*PI)
+
 func init(n :int, card_sizea :Vector2, card_lista :Array, color_lista :Array[Color]) -> Reel:
 	번호 = n
 	card_size = card_sizea
@@ -44,7 +47,7 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 	rotation.x += rotation_per_second * 2 * PI * dur_sec
 	if acceleration > 0:
 		rotation_per_second *= pow( acceleration , dur_sec)
-	if 회전중인가 and abs(rotation_per_second) <= 0.001:
+	if 회전중인가 and abs(rotation_per_second) <= 0.01:
 		회전중인가 = false
 		rotation_per_second = 0.0
 		rotation_stopped.emit(self)
@@ -58,12 +61,12 @@ func 멈추기시작(accel :float=0.5) -> void:
 	assert(accel < 1.0)
 	acceleration = accel
 
-func 선택된칸얻기() -> 칸:
-	if 칸들.size() == 0 :
-		return null
-	var 현재각도 = fposmod(-rotation.x, 2*PI)
-	var 칸위치 = ceili( (현재각도-한칸각도/2) / 한칸각도 ) % 칸들.size()
-	return 칸들[칸위치]
+func 칸중심각도(n :int) -> float:
+	return 한칸각도 * n
 
-func calc_radius() -> float:
-	return card_list.size() * card_size.y / (2*PI)
+func 선택된칸번호() -> int:
+	var 현재각도 = fposmod(-rotation.x, 2*PI)
+	return ceili( (현재각도-한칸각도/2) / 한칸각도 ) % 칸들.size()
+
+func 선택된칸얻기() -> 칸:
+	return 칸들[선택된칸번호()]
