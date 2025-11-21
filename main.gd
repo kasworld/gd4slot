@@ -85,7 +85,7 @@ func _on_카메라변경_pressed() -> void:
 		reset_camera_pos()
 
 func reset_camera_pos()->void:
-	$Camera3D.position = slot.calc_center() + Vector3( 0, 0, slot.calc_radius()*2)
+	$Camera3D.position = slot.calc_center() + Vector3( 0, 0, slot.calc_radius() + slot.calc_width() )
 	$Camera3D.look_at(slot.calc_center())
 	$Camera3D.far = slot.calc_size().length()*2
 

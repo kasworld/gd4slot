@@ -25,7 +25,7 @@ func init() -> Slots:
 	$Bar.mesh.top_radius = 0.1
 	$Bar.mesh.bottom_radius = $Bar.mesh.top_radius
 	$Bar.mesh.height = calc_width()
-	$Bar.position = (reellist[-1].position + reellist[0].position) /2 + Vector3(0,0,reellist[0].calc_radius()*1.1)
+	$Bar.position = (reellist[-1].position + reellist[0].position) /2 + Vector3(0,0,reellist[0].calc_radius())
 
 	return self
 
