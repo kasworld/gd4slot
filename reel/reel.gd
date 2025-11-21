@@ -17,7 +17,7 @@ func init(n :int, card_sizea :Vector2, card_lista :Array, color_lista :Array[Col
 	var count := card_list.size()
 	var r := count * card_size.y / (2*PI)
 	for i in count:
-		var k :칸 = preload("res://reel/칸/칸.tscn").instantiate().init(i, card_size,r,card_list[i], color_list[i])
+		var k :칸 = preload("res://reel/칸/칸.tscn").instantiate().init(i, card_size,r,card_list[i], color_list[i%color_list.size()])
 		k.rotation.x = 2*PI/count *i
 		add_child(k)
 		칸들.append(k)

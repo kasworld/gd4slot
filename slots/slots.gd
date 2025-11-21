@@ -4,19 +4,18 @@ class_name Slots
 signal rotation_stopped(s :Slots)
 
 var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
-var cardlist :Array = PlayingCard.make_deck()
+var cardlist :Array = PlayingCard.make_deck_with_joker()
 var cardsize := Vector2(10,5)
 var reelcount := 4
 var reellist := []
 
 func init() -> Slots:
-	var cardcount := 13
 	for i in reelcount:
-		colorlist.shuffle()
-		var cdlist := cardlist.slice(i*cardcount,i*cardcount+cardcount).duplicate()
-		cdlist.append_array(PlayingCard.Joker)
+		var cdlist := cardlist.duplicate()
 		cdlist.shuffle()
-		var rl = preload("res://reel/reel.tscn").instantiate().init(i, cardsize, cdlist, colorlist.slice(0,cdlist.size()).duplicate())
+		var colist := colorlist.duplicate()
+		colist.shuffle()
+		var rl = preload("res://reel/reel.tscn").instantiate().init(i, cardsize, cdlist, colist)
 		rl.rotation_stopped.connect(결과가결정됨)
 		rl.position =  Vector3(i*cardsize.x+i, 0, 0)
 		add_child(rl)
@@ -25,18 +24,22 @@ func init() -> Slots:
 	$Bar.mesh.material.albedo_color = Color.GOLD
 	$Bar.mesh.top_radius = 0.1
 	$Bar.mesh.bottom_radius = $Bar.mesh.top_radius
-	$Bar.mesh.height = (reellist[-1].position -reellist[0].position).x + cardsize.x
+	$Bar.mesh.height = calc_width()
 	$Bar.position = (reellist[-1].position + reellist[0].position) /2 + Vector3(0,0,reellist[0].calc_radius()*1.1)
 
-	#var arrow_left = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
-	#arrow_left.position = reellist[0].position + Vector3(-cardsize.x/2-2.5,0,radius)
-	#arrow_left.rotation.z = -PI/2
-	#add_child(arrow_left)
-	#var arrow_right = preload("res://arrow3d/arrow_3d.tscn").instantiate().set_color(random_color()).set_size(5,0.2,0.6)
-	#arrow_right.position = reellist[-1].position + Vector3(cardsize.x/2 +2.5,0,radius)
-	#arrow_right.rotation.z = PI/2
-	#add_child(arrow_right)
 	return self
+
+func calc_radius() -> float:
+	return reellist[0].calc_radius()
+
+func calc_width() -> float:
+	return (reellist[-1].position -reellist[0].position).x + cardsize.x
+
+func calc_size() -> Vector3:
+	return Vector3(calc_width(),calc_radius()*2,calc_radius()*2)
+
+func calc_center() -> Vector3:
+	return Vector3(calc_width()/2,0,0)
 
 func 결과가결정됨( _rl :Reel) -> void:
 	var 모두멈추었나 = true
