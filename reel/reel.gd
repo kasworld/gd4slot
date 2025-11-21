@@ -45,7 +45,8 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 	rotation.x += rotation_per_second * 2 * PI * dur_sec
 	if acceleration > 0:
 		rotation_per_second *= pow( acceleration , dur_sec)
-	if 회전중인가 and abs(rotation_per_second) <= 0.01:
+	#if 회전중인가 and abs(rotation_per_second) <= 0.01:
+	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and 칸중심근처인가()) or (abs(rotation_per_second) <= 0.01):
 		회전중인가 = false
 		rotation_per_second = 0.0
 		rotation_stopped.emit(self)
@@ -61,6 +62,11 @@ func 멈추기시작(accel :float=0.5) -> void:
 
 func 칸중심각도(n :int) -> float:
 	return 한칸각도 * n
+
+func 칸중심근처인가() -> bool:
+	var 현재각도 = fposmod(-rotation.x, 2*PI)
+	var 중심각도 = 칸중심각도(선택된칸번호())
+	return abs(현재각도 - 중심각도) <= 한칸각도/100
 
 func 선택된칸번호() -> int:
 	var 현재각도 = fposmod(-rotation.x, 2*PI)
