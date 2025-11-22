@@ -57,15 +57,20 @@ func message_hidden(_s :String) -> void:
 
 var camera_move = false
 func _process(_delta: float) -> void:
-	var t = Time.get_unix_time_from_system() /-3.0
 	if camera_move:
-		$Camera3D.position = Vector3(sin(t)*slot.calc_width(), cos(t)*slot.calc_width(), slot.calc_radius()*1.5 ) + slot.calc_center()
-		$Camera3D.look_at(slot.calc_center())
+		$MovingCameraLight.make_current()
+		$MovingCameraLight.move_hober_around_z(
+			slot.calc_center(),
+			slot.calc_width(),
+			slot.calc_radius()*1.5,
+			-3.0 )
 	main_animation.handle_animation()
 
 var key2fn = {
 	KEY_ESCAPE : _on_button_esc_pressed,
 	KEY_ENTER : _on_카메라변경_pressed,
+	KEY_INSERT:_on_button_fov_up_pressed,
+	KEY_DELETE:_on_button_fov_down_pressed,
 	KEY_SPACE : _on_돌리기_pressed,
 }
 func _unhandled_input(event: InputEvent) -> void:
@@ -85,9 +90,17 @@ func _on_카메라변경_pressed() -> void:
 		reset_camera_pos()
 
 func reset_camera_pos()->void:
-	$Camera3D.position = slot.calc_center() + Vector3( 0, 0, slot.calc_radius() + slot.calc_width() )
-	$Camera3D.look_at(slot.calc_center())
-	$Camera3D.far = slot.calc_size().length()*2
+	$FixedCameraLight.make_current()
+	$FixedCameraLight.set_center_pos_far(
+		slot.calc_center(),
+		Vector3( 0, 0, slot.calc_radius() + slot.calc_width() ),
+		slot.calc_size().length()*2)
+
+func _on_button_fov_up_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
+
+func _on_button_fov_down_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
 
 func _on_돌리기_pressed() -> void:
 	slot.돌리기시작()

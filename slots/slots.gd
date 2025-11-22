@@ -12,7 +12,8 @@ var reellist := []
 func init() -> Slots:
 	var 칸정보목록 := []
 	for i in cardlist.size():
-		칸정보목록.append( [cardlist[i], colorlist[i%colorlist.size()]]  )
+		칸정보목록.append( [cardlist[i], colorlist[i%colorlist.size()]] )
+	칸정보목록.shuffle()
 	for i in reelcount:
 		var kilist := 칸정보목록.duplicate()
 		kilist.shuffle()
