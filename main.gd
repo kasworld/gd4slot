@@ -37,7 +37,7 @@ func _ready() -> void:
 
 	$OmniLight3D.position = slot.calc_center() + Vector3( 0, 0, slot.calc_radius()*2)
 	$OmniLight3D.omni_range = slot.calc_size().length()*2
-	reset_camera_pos()
+	set_fixedcamera_pos()
 
 func 슬롯멈춤(sl :Slots) -> void:
 	var 칸들 := sl.선택된칸들얻기()
@@ -55,10 +55,8 @@ func on_viewport_size_changed():
 func message_hidden(_s :String) -> void:
 	pass
 
-var camera_move = false
 func _process(_delta: float) -> void:
-	if camera_move:
-		$MovingCameraLight.make_current()
+	if $MovingCameraLight.is_current_camera():
 		$MovingCameraLight.move_hober_around_z(
 			slot.calc_center(),
 			slot.calc_width(),
@@ -85,12 +83,9 @@ func _on_button_esc_pressed() -> void:
 	get_tree().quit()
 
 func _on_카메라변경_pressed() -> void:
-	camera_move = !camera_move
-	if camera_move == false:
-		reset_camera_pos()
+	MovingCameraLight.NextCamera()
 
-func reset_camera_pos()->void:
-	$FixedCameraLight.make_current()
+func set_fixedcamera_pos()->void:
 	$FixedCameraLight.set_center_pos_far(
 		slot.calc_center(),
 		Vector3( 0, 0, slot.calc_radius() + slot.calc_width() ),
