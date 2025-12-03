@@ -12,20 +12,16 @@ func start_rotate_animation(nd :Node3D, axis :int, ani_dur :float) -> void:
 func start_all_animation() -> void:
 	pass
 
+var vp_size :Vector2
 var slot :Slots
 
 func _ready() -> void:
+	timed_message_init()
 	get_viewport().size_changed.connect(on_viewport_size_changed)
-	var vp_size = get_viewport().get_visible_rect().size
 	var 짧은길이 = min(vp_size.x,vp_size.y)
 	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
-
-	var msgrect = Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
-	$TimedMessage.init(80, msgrect, tr("gd4slot 2.0.0"))
-	$TimedMessage.panel_hidden.connect(message_hidden)
-	$TimedMessage.show_message("",0)
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
@@ -39,10 +35,23 @@ func _ready() -> void:
 	$OmniLight3D.omni_range = slot.calc_size().length()*2
 	set_fixedcamera_pos()
 
+func timed_message_init() -> void:
+	vp_size = get_viewport().get_visible_rect().size
+	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
+	$TimedMessage.init(80, msgrect,
+		"%s %s" % [
+			ProjectSettings.get_setting("application/config/name"),
+			ProjectSettings.get_setting("application/config/version")
+			] )
+
+	$TimedMessage.panel_hidden.connect(message_hidden)
+	$TimedMessage.show_message("",0)
+
+
 func 슬롯멈춤(sl :Slots) -> void:
-	var 칸들 := sl.선택된칸들얻기()
+	var symbol들 := sl.선택된symbol들얻기()
 	var 결과 := ""
-	for k in 칸들:
+	for k in symbol들:
 		결과 += k.글내용 + " "
 	$"왼쪽패널/점수".text = 결과
 

@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="gd4slot"
+config/name="gd4SlotReels"
+config/version="3.0.0"
 run/main_scene="uid://c6maulcewyhy5"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
