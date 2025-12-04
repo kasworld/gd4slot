@@ -5,19 +5,22 @@ signal rotation_stopped(s :Slots)
 
 var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var cardlist :Array = PlayingCard.make_deck_with_joker()
+func make_color_text_info_list() -> Array:
+	var rtn := []
+	for i in cardlist.size():
+		rtn.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
+	return rtn
+
 var symbol크기 := Vector2(10,5)
 var reelcount := 5
 var reellist := []
 
 func init() -> Slots:
-	var symbol정보목록 := []
-	for i in cardlist.size():
-		symbol정보목록.append( [cardlist[i], colorlist[i%colorlist.size()]] )
-	symbol정보목록.shuffle()
+	var color_text_info_list := make_color_text_info_list()
 	for i in reelcount:
-		var kilist := symbol정보목록.duplicate()
+		var kilist := color_text_info_list.duplicate()
 		kilist.shuffle()
-		var rl = preload("res://reel/reel.tscn").instantiate().init(i, symbol크기, kilist)
+		var rl = preload("res://slot_reel/slot_reel.tscn").instantiate().init(i, symbol크기, kilist)
 		rl.rotation_stopped.connect(결과가결정됨)
 		rl.position = Vector3(i*symbol크기.x+i +symbol크기.x/2 -calc_width()/2, 0, 0)
 		add_child(rl)
@@ -43,7 +46,7 @@ func calc_size() -> Vector3:
 func calc_center() -> Vector3:
 	return Vector3(0,0,0)
 
-func 결과가결정됨( _rl :Reel) -> void:
+func 결과가결정됨( _rl :SlotReel) -> void:
 	var 모두멈추었나 = true
 	for n in reellist:
 		if n.회전중인가:
