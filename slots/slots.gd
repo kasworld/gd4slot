@@ -19,7 +19,7 @@ func init() -> Slots:
 	var color_text_info_list := make_color_text_info_list()
 	for i in reelcount:
 		var kilist := color_text_info_list.duplicate()
-		kilist.shuffle()
+		#kilist.shuffle()
 		var rl = preload("res://slot_reel/slot_reel.tscn").instantiate().init(i, symbol크기, kilist)
 		rl.rotation_stopped.connect(결과가결정됨)
 		rl.position = Vector3(i*symbol크기.x+i +symbol크기.x/2 -calc_width()/2, 0, 0)

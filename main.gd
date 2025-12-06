@@ -52,7 +52,7 @@ func 슬롯멈춤(sl :Slots) -> void:
 	var symbol들 := sl.선택된symbol들얻기()
 	var 결과 := ""
 	for k in symbol들:
-		결과 += k.글내용 + " "
+		결과 += k.글내용얻기() + " "
 	$"왼쪽패널/점수".text = 결과
 
 func random_color()->Color:

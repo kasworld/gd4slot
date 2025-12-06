@@ -46,7 +46,7 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 	if acceleration > 0:
 		rotation_per_second *= pow( acceleration , dur_sec)
 	#if 회전중인가 and abs(rotation_per_second) <= 0.01:
-	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and symbol중심근처인가()) or (abs(rotation_per_second) <= 0.01):
+	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and symbol중심근처인가() ) or (abs(rotation_per_second) <= 0.01):
 		회전중인가 = false
 		rotation_per_second = 0.0
 		rotation_stopped.emit(self)
@@ -67,6 +67,11 @@ func symbol중심근처인가() -> bool:
 	var 현재각도 = fposmod(-rotation.x, 2*PI)
 	var 중심각도 = symbol중심각도(선택된symbol번호())
 	return abs(현재각도 - 중심각도) <= symbol각도/100
+
+# 0 - 1
+func 중심각차이율(rad :float) -> float:
+	var 각도차이 := fposmod(rad, symbol각도)
+	return 1- abs(각도차이 / symbol각도 - 0.5) *2
 
 func 선택된symbol번호() -> int:
 	var 현재각도 = fposmod(-rotation.x, 2*PI)
