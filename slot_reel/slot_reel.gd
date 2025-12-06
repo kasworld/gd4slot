@@ -79,3 +79,6 @@ func 선택된symbol번호() -> int:
 
 func 선택된symbol얻기() -> ReelSymbol:
 	return symbol_list[선택된symbol번호()]
+
+func debug_str() -> String:
+	return "%f %f %f" % [ rad_to_deg(rotation.x), rad_to_deg(symbol각도), 중심각차이율(rotation.x) ]

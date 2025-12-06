@@ -53,6 +53,13 @@ offset_right = 344.0
 offset_bottom = 371.0
 theme = SubResource("Theme_h2yge")
 
+[node name="LabelDebug" type="Label" parent="오른쪽패널"]
+layout_mode = 2
+
+[node name="HSlider" type="HSlider" parent="오른쪽패널"]
+layout_mode = 2
+max_value = 360.0
+
 [node name="TimedMessage" parent="." instance=ExtResource("5_lquwl")]
 self_modulate = Color(1, 1, 1, 0.498039)
 theme = SubResource("Theme_7mycd")
@@ -65,3 +72,5 @@ environment = ExtResource("3_h2yge")
 [node name="MovingCameraLight" parent="." instance=ExtResource("5_7mycd")]
 
 [node name="FixedCameraLight" parent="." instance=ExtResource("5_7mycd")]
+
+[connection signal="value_changed" from="오른쪽패널/HSlider" to="." method="_on_h_slider_value_changed"]

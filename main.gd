@@ -108,3 +108,7 @@ func _on_button_fov_down_pressed() -> void:
 
 func _on_돌리기_pressed() -> void:
 	slot.돌리기시작()
+
+func _on_h_slider_value_changed(value: float) -> void:
+	slot.reel_list[0].rotation.x = deg_to_rad(value)
+	$"오른쪽패널/LabelDebug".text = slot.reel_list[0].debug_str()
