@@ -69,8 +69,10 @@ environment = ExtResource("3_h2yge")
 
 [node name="AxisArrow3D" parent="." instance=ExtResource("4_1bvp3")]
 
-[node name="MovingCameraLight" parent="." instance=ExtResource("5_7mycd")]
-
 [node name="FixedCameraLight" parent="." instance=ExtResource("5_7mycd")]
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("5_7mycd")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("5_7mycd")]
 
 [connection signal="value_changed" from="오른쪽패널/HSlider" to="." method="_on_h_slider_value_changed"]

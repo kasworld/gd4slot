@@ -65,13 +65,12 @@ func message_hidden(_s :String) -> void:
 	pass
 
 func _process(_delta: float) -> void:
-	if $MovingCameraLight.is_current_camera():
-		$MovingCameraLight.move_hober_around_z(
-			slot.calc_center(),
-			slot.calc_width(),
-			slot.calc_radius()*1.5,
-			-3.0 )
 	main_animation.handle_animation()
+	var t := Time.get_unix_time_from_system() /2.3
+	if $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(t,slot.calc_center(),slot.calc_width(),	slot.calc_radius()*1.5)
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(t,slot.calc_center(),slot.calc_width(),	slot.calc_radius()*1.5)
 
 var key2fn = {
 	KEY_ESCAPE : _on_button_esc_pressed,
