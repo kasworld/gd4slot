@@ -3,48 +3,28 @@ class_name Slots
 
 signal rotation_stopped(s :Slots)
 
-var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
-var cardlist :Array = PlayingCard.make_deck_with_joker()
-func make_color_text_info_list() -> Array:
-	var rtn := []
-	for i in cardlist.size():
-		rtn.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
-	return rtn
-
-var symbol크기 := Vector2(10,5)
-var reelcount := 5
 var reel_list := []
-
-func init() -> Slots:
-	var color_text_info_list := make_color_text_info_list()
+func init(reelcount :int, symbol크기 :Vector2, color_text_info_list: Array) -> Slots:
+	var total_width := reelcount*(symbol크기.x+1)
 	for i in reelcount:
 		var kilist := color_text_info_list.duplicate()#.slice(0,7)
 		kilist.shuffle()
 		var rl = preload("res://slot_reel/slot_reel.tscn").instantiate().init(i, symbol크기, kilist)
 		rl.rotation_stopped.connect(결과가결정됨)
-		rl.position = Vector3(i*symbol크기.x+i +symbol크기.x/2 -calc_width()/2, 0, 0)
+		rl.position = Vector3(i*symbol크기.x+i +symbol크기.x/2 -total_width/2, 0, 0)
 		add_child(rl)
 		reel_list.append(rl)
 
 	$Bar.mesh.material.albedo_color = Color.GOLD
 	$Bar.mesh.top_radius = 0.1
 	$Bar.mesh.bottom_radius = $Bar.mesh.top_radius
-	$Bar.mesh.height = calc_width()
+	$Bar.mesh.height = total_width
 	$Bar.position = (reel_list[-1].position + reel_list[0].position) /2 + Vector3(0,0,reel_list[0].calc_radius())
 
 	return self
 
 func calc_radius() -> float:
 	return reel_list[0].calc_radius()
-
-func calc_width() -> float:
-	return reelcount*(symbol크기.x+1)
-
-func calc_size() -> Vector3:
-	return Vector3(calc_width(),calc_radius()*2,calc_radius()*2)
-
-func calc_center() -> Vector3:
-	return Vector3(0,0,0)
 
 func 결과가결정됨( _rl :SlotReel) -> void:
 	var 모두멈추었나 = true

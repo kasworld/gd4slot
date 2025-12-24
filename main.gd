@@ -12,8 +12,19 @@ func start_rotate_animation(nd :Node3D, axis :int, ani_dur :float) -> void:
 func start_all_animation() -> void:
 	pass
 
+
+var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
+var cardlist :Array = PlayingCard.make_deck_with_joker()
+func make_color_text_info_list() -> Array:
+	var rtn := []
+	for i in cardlist.size():
+		rtn.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
+	return rtn
+
 var vp_size :Vector2
 var slot :Slots
+var symbol_size := Vector2(8,4)
+var reel_count := 5
 
 func _ready() -> void:
 	timed_message_init()
@@ -25,14 +36,14 @@ func _ready() -> void:
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
-	slot = preload("res://slots/slots.tscn").instantiate().init()
+	slot = preload("res://slots/slots.tscn").instantiate().init(reel_count, symbol_size, make_color_text_info_list())
 	add_child(slot)
 	slot.rotation_stopped.connect(슬롯멈춤)
 
-	$AxisArrow3D.set_size(slot.calc_radius())
+	$AxisArrow3D.set_size(slot.calc_radius()).set_colors()
 
-	$OmniLight3D.position = slot.calc_center() + Vector3( 0, 0, slot.calc_radius()*2)
-	$OmniLight3D.omni_range = slot.calc_size().length()*2
+	$OmniLight3D.position = Vector3( 0, 0, slot.calc_radius()*2)
+	$OmniLight3D.omni_range = slot.calc_radius()*4
 	set_fixedcamera_pos()
 
 func timed_message_init() -> void:
@@ -68,9 +79,9 @@ func _process(_delta: float) -> void:
 	main_animation.handle_animation()
 	var t := Time.get_unix_time_from_system() /2.3
 	if $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(t,slot.calc_center(),slot.calc_width(),	slot.calc_radius()*1.5)
+		$MovingCameraLightHober.move_hober_around_z(t,Vector3.ZERO,reel_count*symbol_size.x, slot.calc_radius()*1.5)
 	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(t,slot.calc_center(),slot.calc_width(),	slot.calc_radius()*1.5)
+		$MovingCameraLightAround.move_wave_around_y(t,Vector3.ZERO,reel_count*symbol_size.x, slot.calc_radius()*1.5)
 
 var key2fn = {
 	KEY_ESCAPE : _on_button_esc_pressed,
@@ -95,9 +106,9 @@ func _on_카메라변경_pressed() -> void:
 
 func set_fixedcamera_pos()->void:
 	$FixedCameraLight.set_center_pos_far(
-		slot.calc_center(),
-		Vector3( 0, 0, slot.calc_radius() + slot.calc_width() ),
-		slot.calc_size().length()*2)
+		Vector3.ZERO,
+		Vector3( 0, 0, slot.calc_radius() + reel_count*symbol_size.x ),
+		slot.calc_radius()*4)
 
 func _on_button_fov_up_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().fov_camera_inc()

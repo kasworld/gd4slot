@@ -17,20 +17,22 @@ func init_집중선(r :float, start:float, end:float, depth :float, count :int, 
 		set_inst_color(i, co)
 	return self
 
-func init_wire_net(net_size :Vector2, wire_count :Vector2i, wire_radius :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+func init_wire_net(net_size :Vector2, grid_count :Vector2i, wire_radius :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+	var wire_count := Vector2i(grid_count.x +1, grid_count.y +1)
+	var pos_shift := -Vector3(net_size.x, net_size.y, 0)/2
 	var 선 := BoxMesh.new()
 	var count := wire_count.x + wire_count.y
 	init_with_alpha(선, count, alpha)
 	for i in count:
 		multimesh.set_instance_color(i,co)
 		if i < wire_count.x:
-			var pos := Vector3( net_size.x/(wire_count.x-1)* i, net_size.y/2, 0)
+			var pos := Vector3( net_size.x/(wire_count.x-1)* i, net_size.y/2, 0) + pos_shift
 			var t := Transform3D(Basis(), pos)
 			#t = t.rotated(Vector3(0,1,0), bar_rot)
 			t = t.scaled_local( Vector3(wire_radius,net_size.y,wire_radius) )
 			multimesh.set_instance_transform(i,t)
 		else:
-			var pos := Vector3(net_size.x/2, net_size.y/(wire_count.y-1)* (i-wire_count.x), 0)
+			var pos := Vector3(net_size.x/2, net_size.y/(wire_count.y-1)* (i-wire_count.x), 0) + pos_shift
 			var t := Transform3D(Basis(), pos)
 			#t = t.rotated(Vector3(0,1,0), bar_rot)
 			t = t.scaled_local( Vector3(net_size.x,wire_radius,wire_radius) )
@@ -157,12 +159,22 @@ func calc_visible_rate() -> float:
 func set_inst_rotation(i :int, axis :Vector3, rot :float) -> void:
 	var t := multimesh.get_instance_transform(i)
 	t = t.rotated_local(axis, rot)
-	multimesh.set_instance_transform(i,t )
+	multimesh.set_instance_transform(i, t)
+
+func set_inst_scale(i :int, scale_a :Vector3) -> void:
+	var t := multimesh.get_instance_transform(i)
+	t = t.scaled_local(scale_a)
+	multimesh.set_instance_transform(i, t)
 
 func set_inst_position(i :int, pos :Vector3) -> void:
 	var t := multimesh.get_instance_transform(i)
 	t.origin = pos
-	multimesh.set_instance_transform(i,t )
+	multimesh.set_instance_transform(i, t)
 
 func set_inst_color(i, co :Color) -> void:
 	multimesh.set_instance_color(i,co)
+
+func set_inst_position_rotation(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
+	var t := Transform3D(Basis(), pos)
+	t = t.rotated_local(axis, rot)
+	multimesh.set_instance_transform(i, t)
