@@ -11,7 +11,7 @@ func make_deck() -> Array:
 		for n in Numbers:
 			rtn.append("%s%s" %[s,n])
 	return rtn
-
+		
 func make_deck_with_joker() -> Array:
 	var rtn := make_deck()
 	rtn.append_array(Joker)

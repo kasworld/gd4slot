@@ -60,7 +60,7 @@ func make_MajorArcana_name_deck() -> Array:
 	for c in MajorArcana:
 		rtn.append("%s" %c[1])
 	return rtn
-
+	
 func make_full_deck() -> Array:
 	var rtn := make_MinorArcana_name_deck()
 	rtn.append_array(make_MajorArcana_deck())
